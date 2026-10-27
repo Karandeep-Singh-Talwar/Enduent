@@ -1,0 +1,16 @@
+{
+  "name": "qc-api-explorer",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Local explorer for QuickCommerce API (Blinkit, Zepto, Instamart, BigBasket, ...)",
+  "engines": {
+    "node": ">=22.9"
+  },
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "node --watch-path=server --watch-path=shared --watch-path=.env server/index.js",
+    "test": "node --test",
+    "test:coverage": "node --test --experimental-test-coverage"
+  }
+}

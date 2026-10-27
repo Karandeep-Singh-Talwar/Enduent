@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>QC API Explorer</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script type="module" src="/app.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo" aria-hidden="true">QC</span>
+      <div>
+        <h1>QC API Explorer</h1>
+        <p class="sub">Blinkit · Zepto · Instamart · BigBasket · and more</p>
+      </div>
+    </div>
+    <div class="status">
+      <span id="key-status" class="pill">Checking key…</span>
+      <button id="history-btn" class="pill pill-btn" type="button" title="Re-open saved responses (free)">History</button>
+      <button id="credits-btn" class="pill pill-btn" type="button" title="Refresh credit balance (free)">
+        Credits <strong id="credits-value">—</strong>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <section class="card location-bar" aria-label="Delivery location">
+      <div class="loc-row">
+        <button id="loc-gps" type="button" class="primary">📍 Use my location</button>
+        <span class="muted or">or</span>
+        <form id="loc-form" class="loc-form">
+          <input id="loc-input" placeholder="Pincode or area, e.g. 560102 or Indiranagar Bangalore" autocomplete="postal-code" aria-label="Pincode or area">
+          <button type="submit">Find</button>
+        </form>
+      </div>
+      <div id="loc-current" class="loc-current"></div>
+      <ul id="loc-choices" class="loc-choices" hidden></ul>
+      <p id="loc-message" class="hint"></p>
+    </section>
+
+    <form id="search-form" class="card search-panel" novalidate>
+      <div class="mode" role="radiogroup" aria-label="Search mode">
+        <label><input type="radio" name="mode" value="products" checked> Products</label>
+        <label><input type="radio" name="mode" value="brand"> Competitor brand catalog</label>
+      </div>
+      <div class="search-row">
+        <input id="search-input" name="q" placeholder="Search products, e.g. amul butter" autocomplete="off" aria-label="Search">
+        <button id="search-btn" type="submit" class="primary">Search</button>
+      </div>
+      <label id="keywords-row" class="keywords" hidden>
+        Also search the brand with these words (comma separated, each one adds 1 credit per platform)
+        <input name="keywords" placeholder="e.g. paneer, curd, ghee, cheese">
+      </label>
+      <fieldset>
+        <legend>Platforms</legend>
+        <div class="quick-pick">
+          <button type="button" data-pick="qc">Quick commerce</button>
+          <button type="button" data-pick="india">All India</button>
+          <button type="button" data-pick="uae">UAE</button>
+          <button type="button" data-pick="none">None</button>
+        </div>
+        <div id="platform-checks" class="checks"></div>
+      </fieldset>
+      <div class="actions">
+        <button id="eta-refresh" type="button" class="link-btn">Refresh delivery ETA next search</button>
+        <span id="cost-line" class="cost"></span>
+      </div>
+      <ul id="search-errors" class="errors"></ul>
+    </form>
+
+    <section id="results" class="card results" hidden aria-live="polite">
+      <div class="results-head">
+        <h2 id="result-title"></h2>
+        <div id="result-meta" class="meta"></div>
+      </div>
+      <ul id="run-failures" class="errors"></ul>
+      <div id="platform-strip" class="platform-strip"></div>
+
+      <div class="brand-tools">
+        <div class="brand-head">
+          <strong>Brands</strong>
+          <span class="muted">click to filter · pick several to compare</span>
+          <span class="spacer"></span>
+          <label class="my-brand">★ My brand <input id="my-brand" placeholder="e.g. Amul" autocomplete="off"></label>
+          <button id="brand-clear" type="button">Clear filter</button>
+        </div>
+        <div id="brand-bar" class="brand-bar"></div>
+        <div id="brand-matrix" class="brand-matrix"></div>
+      </div>
+
+      <div class="table-tools">
+        <label class="inline-toggle" title="Hide items the platform appended that don't match your search words (e.g. bread and dal after butter)">
+          <input id="relevant-only" type="checkbox" checked> Relevant only
+        </label>
+        <span id="hidden-count" class="warn-text"></span>
+        <input id="table-filter" type="search" placeholder="Filter by name, brand, id…" aria-label="Filter rows">
+        <span id="row-count" class="muted"></span>
+        <span class="spacer"></span>
+        <button id="export-csv" type="button">Export CSV</button>
+      </div>
+      <div id="result-view" class="view"></div>
+
+      <details class="extra">
+        <summary>Field coverage: what data each product carries</summary>
+        <div id="field-coverage"></div>
+      </details>
+      <details class="extra">
+        <summary>Raw API responses</summary>
+        <div id="raw-json"></div>
+      </details>
+    </section>
+  </main>
+
+  <dialog id="confirm-dialog">
+    <form method="dialog">
+      <h3>Spend credits?</h3>
+      <p id="confirm-text"></p>
+      <div class="actions">
+        <button value="cancel" type="submit">Cancel</button>
+        <button value="ok" type="submit" class="primary">Run it</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="history-dialog">
+    <h3>Saved responses</h3>
+    <p class="muted">Every successful paid call is saved in <code>samples/</code>. Opening one is free.</p>
+    <ul id="saved-list" class="saved-list"></ul>
+    <form method="dialog" class="actions"><button type="submit">Close</button></form>
+  </dialog>
+
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+</body>
+</html>
